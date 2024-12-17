@@ -28,18 +28,20 @@ async def command_start_handler(message: aiogram.types.Message) -> None:
 async def echo_handler(message: aiogram.types.Message) -> None:
     if message.from_user.id in OP_LIST:
         if message.text == "Minecraft ON":
-            c = os.system(src.on_prompt)
-            if c:
-                await message.answer("Error while enabling MC")
-            else:
-                await message.answer("Done!")
+            for prompt in src.gen_prompts(True):
+                c = os.system(prompt)
+                if c:
+                    await message.answer("Unknown error...")
+                else:
+                    await message.answer("Done!")
 
         elif message.text == "Minecraft OFF":
-            c = os.system(src.off_prompt)
-            if c:
-                await message.answer("Error while enabling MC")
-            else:
-                await message.answer("Done!")
+            for prompt in src.gen_prompts(False):
+                c = os.system(prompt)
+                if c:
+                    await message.answer("Unknown error...")
+                else:
+                    await message.answer("Done!")
 
         else:
             await message.answer('Unknown command!')
